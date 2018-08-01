@@ -309,6 +309,7 @@ for index, row in df_estaciones.iterrows():
     # calcular intepolación a la estación
     z_tx1, z_tn1,z_tx2, z_tn2,z_tx3, z_tn3,z_tx4, z_tn4,z_tx5, z_tn5 = generar_interpolacion(p1, p2, p3)
     print("Estacion: ", row["Nombre"])
+    print("Numero_Estacion: ", row["Numero"])
     print("Latutid: {}\nLongitud: {}".format(row["Latitud"], row["Longitud"]))
     print("Tmax1: ", z_tx1)
     print("Tmin1: ", z_tn1)
