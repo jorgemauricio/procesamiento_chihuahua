@@ -145,10 +145,19 @@ df_estaciones = pd.read_csv("/home/jorge/Documents/Research/procesamiento_chihua
 
 isPrimerDistancia = True
 
+# dataframe for json
+#df_json = pd.DataFrame()
+
+# counter
+counter = 0
 # ciclo de estaciones
 for index, row in df_estaciones.iterrows():
+    # dataframe for json
+    df_json = pd.DataFrame()
+
     # ciclo de información para datos WRF
     for indexWRF, rowWRF in df.iterrows():
+
         if isPrimerDistancia:
             # iniciar los puntos
             p1 = Punto(0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
@@ -324,4 +333,33 @@ for index, row in df_estaciones.iterrows():
     print("Distancia1: ", p1.distancia)
     print("Distancia2: ", p2.distancia)
     print("Distancia3: ", p3.distancia)
-    print("\n")
+    d = {"Numero" : row["Numero"],
+         "Tmax1" : z_tx1,
+         "Tmax2" : z_tx2,
+         "Tmax3" : z_tx3,
+         "Tmax4" : z_tx4,
+         "Tmax5" : z_tx5,
+         "Tmin1" : z_tn1,
+         "Tmin2" : z_tn2,
+         "Tmin3" : z_tn3,
+         "Tmin4" : z_tn4,
+         "Tmin5" : z_tn5}
+    df_json = df_json.append(d, ignore_index=True)
+
+    print(df_json.head())
+    print(df_json.to_json(orient="records"))
+
+    json = df_json.to_json(orient="records")
+
+    print("*****",type(json))
+
+    r = requests.get('http://clima.inifap.gob.mx:81/wrf/proceso/w?json={}'.format(json),)
+
+    print(r.url)
+    print("*****", r.text)
+    print("*****", r.status_code)
+    print("********************")
+    print("***    {}    *******".format(counter))
+    print("********************")
+    counter +=1
+    time.sleep(2)
